@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 const reduce = require('lodash.reduce');
 const first = require('lodash.first');
 const tail = require('lodash.tail');
-const find = requrie('lodash.find');
+const find = require('lodash.find');
 
 import countryData from './country_data';
 const allCountriesObject = countryData.allCountriesObject;
