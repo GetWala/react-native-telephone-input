@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 const reduce = require('lodash.reduce');
 const first = require('lodash.first');
 const tail = require('lodash.tail');
+const find = requrie('lodash.find');
 
 import countryData from './country_data';
 const allCountriesObject = countryData.allCountriesObject;
@@ -15,9 +16,10 @@ import {
 
 export default class TelephoneInput extends Component {
   static propTypes = {
-	wrapperStyle: View.propTypes.style,
-	countryStyle: Text.propTypes.style,
-	textStyle: TextInput.propTypes.style,
+    wrapperStyle: View.propTypes.style,
+    countryStyle: Text.propTypes.style,
+    textStyle: TextInput.propTypes.style,
+    iso2: Text.propTypes.style
   }
   constructor(props) {
     super(props);
@@ -35,8 +37,8 @@ export default class TelephoneInput extends Component {
       return '+';
     }
 
-        // for all strings with length less than 3, just return it (1, 2 etc.)
-        // also return the same text if the selected country has no fixed format
+    // for all strings with length less than 3, just return it (1, 2 etc.)
+    // also return the same text if the selected country has no fixed format
     if ((text && text.length < 2) || !pattern) {
       return `+${text}`;
     }
@@ -71,7 +73,7 @@ export default class TelephoneInput extends Component {
           this.setState({ iso_code: '', formattedNumber: phoneNumber });
         } else {
           const formattedNumber = this.formatNumber(phoneNumber.replace(/\D/g, ''),
-                                                    allCountriesObject[this.state.index].format);
+            allCountriesObject[this.state.index].format);
           this.setState({
             iso_code: this.state.best_choice,
             formattedNumber,
@@ -80,6 +82,13 @@ export default class TelephoneInput extends Component {
       }
     }
   }
+  getSelectedCountry(phoneNumber, iso2){
+    let countryFormats = find(allCountriesObject, (country) => {
+      return country.iso2 === iso2;
+    });
+    const formattedNumber = this.formatNumber(phoneNumber.replace(/\D/g, ''), countryFormats.format);
+    this.setState({iso_code: countryFormats.iso_code, formattedNumber })
+  }
   render() {
     return (
       <View style={[{ flex: 1, flexDirection: 'row' }, this.props.wrapperStyle]}>
@@ -87,7 +96,7 @@ export default class TelephoneInput extends Component {
         <TextInput
           style={[{ flex: 0.9, }, this.props.textStyle]}
           value={this.state.formattedNumber}
-          onChange={(event) => {this.getCountryName(event.nativeEvent.text)}}
+          onChange={(event) => {this.props.iso2 ? this.getSelectedCountry(event.nativeEvent.text, this.props.iso2) : this.getCountryName(event.nativeEvent.text) }}
           {...this.props}
         />
       </View>
