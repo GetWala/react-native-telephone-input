@@ -29,7 +29,7 @@
     "lodash.reduce": "4.4.0",
     "lodash.tail": "4.0.4",
     "react": "15.1.0",
-    "react-native": "0.28.0"
+    "react-native": "0.41.0"
   },
   "devDependencies": {
     "eslint": "2.13.1",
